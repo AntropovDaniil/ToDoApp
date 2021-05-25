@@ -1,24 +1,21 @@
 package com.example.todoapp.viewModels
 
 import android.app.Application
-import android.app.DatePickerDialog
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.todoapp.database.TaskDatabase
 import com.example.todoapp.database.TaskEntity
 import com.example.todoapp.database.TaskRepository
-import com.example.todoapp.mappers.TaskMapper
-import com.example.todoapp.models.SortMode
-import com.example.todoapp.models.Task
+import com.example.todoapp.enums.SortMode
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.DisposableHandle
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
-import java.util.*
 
 class TaskViewModel(application: Application): AndroidViewModel(application) {
 
     var readAllTasks: LiveData<List<TaskEntity>>
     private val repository: TaskRepository
+
+    var sortMode = SortMode.SORT_NO_MODE
 
     init {
         val taskDao = TaskDatabase.getDatabase(application.applicationContext).taskDao()
@@ -48,6 +45,10 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO){
             repository.deleteAllTasks()
         }
+    }
+
+    fun searchTask(query: String): LiveData<List<TaskEntity>>{
+        return repository.searchTask(query).asLiveData()
     }
 
     fun setTaskDate(year: Int, month: Int, day: Int): String{

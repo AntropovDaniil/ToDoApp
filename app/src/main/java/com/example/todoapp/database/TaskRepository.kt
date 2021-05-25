@@ -1,13 +1,13 @@
 package com.example.todoapp.database
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import com.example.todoapp.mappers.TaskMapper
-import com.example.todoapp.models.Task
+import kotlinx.coroutines.flow.Flow
 
 class TaskRepository(private val taskDao: TaskDao) {
 
     val readAllTasks: LiveData<List<TaskEntity>> = taskDao.readAllTasks()
+
+    //val searchTask: LiveData<List<TaskEntity>> = taskDao.searchTask()
 
 
     suspend fun addTask(task: TaskEntity){
@@ -24,6 +24,10 @@ class TaskRepository(private val taskDao: TaskDao) {
 
     suspend fun deleteAllTasks(){
         taskDao.deleteAllTasks()
+    }
+
+    fun searchTask(query: String): Flow<List<TaskEntity>> {
+        return taskDao.searchTask(query)
     }
 
 }

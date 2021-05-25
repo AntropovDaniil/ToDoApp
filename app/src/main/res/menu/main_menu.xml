@@ -7,7 +7,8 @@
         android:title="@string/search_task_menu"
         android:icon="@drawable/menu_search_icon"
         app:showAsAction="ifRoom"
-        android:iconTint="@color/white"/>
+        android:iconTint="@color/white"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
     <item android:id="@+id/sort_task"
         android:title="@string/sort_task_menu"

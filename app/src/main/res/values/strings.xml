@@ -26,4 +26,6 @@
     <string name="sort_by_name_menu">Name</string>
     <string name="sort_by_time_menu">Time</string>
     <string name="sort_by_priority_menu">Priority</string>
+    <string name="background_text_title">No tasks yet</string>
+    <string name="background_text">No tasks in your list. \n Add your first ToDo.</string>
 </resources>

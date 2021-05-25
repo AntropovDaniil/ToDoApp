@@ -3,20 +3,18 @@ package com.example.todoapp.adapters
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Paint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
 import com.example.todoapp.TaskListFragmentDirections
 import com.example.todoapp.database.TaskEntity
 import com.example.todoapp.databinding.TaskItemLayoutBinding
-import com.example.todoapp.models.SortMode
-import com.example.todoapp.models.Task
-import com.example.todoapp.models.TaskPriority
+import com.example.todoapp.enums.SortMode
+import com.example.todoapp.enums.TaskPriority
+import java.util.*
 
 class TaskListAdapter(): RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder>() {
 
@@ -41,9 +39,9 @@ class TaskListAdapter(): RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder
         holder.binding.taskTitle.text = taskList[position].taskName
         holder.binding.taskDescription.text = taskList[position].taskDescription
         when(taskList[position].taskPriority){
-            "low_priority" -> holder.binding.taskPriority.setBackgroundColor(Color.GREEN) //.setColorFilter(Color.GREEN)
-            "medium_priority" -> holder.binding.taskPriority.setBackgroundColor(Color.YELLOW)
-            "high_priority" -> holder.binding.taskPriority.setBackgroundColor(Color.RED)
+            TaskPriority.LOW_PRIORITY -> holder.binding.taskPriority.setBackgroundColor(Color.GREEN)
+            TaskPriority.MEDIUM_PRIORITY -> holder.binding.taskPriority.setBackgroundColor(Color.YELLOW)
+            TaskPriority.HIGH_PRIORITY -> holder.binding.taskPriority.setBackgroundColor(Color.RED)
         }
 
         if (taskList[position].taskRemindFlag){
@@ -84,12 +82,38 @@ class TaskListAdapter(): RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder
 
     fun sortTaskList(sortMode: SortMode){
         when(sortMode){
+            SortMode.SORT_NO_MODE -> taskList.sortedBy { it.taskId }
             SortMode.SORT_BY_NAME -> {
-                taskList = taskList.sortedBy {
-                    it.taskName
-                }
+                taskList = taskList.sortedBy {it.taskName}
+            }
+            SortMode.SORT_BY_PRIORITY -> {
+                taskList = taskList.sortedByDescending { it.taskPriority }
+            }
+            SortMode.SORT_BY_TIME -> {
+                taskList = taskList.sortedBy { taskTimeCompareMap(it.taskDate, it.taskTime) }
             }
         }
         notifyDataSetChanged()
+    }
+
+    private fun taskTimeCompareMap(date: String, time: String): Date{
+        var result = Date()
+        if (date.isNotEmpty() && time.isNotEmpty()){
+            result = Date(
+                date.substringAfterLast(".").toInt(),
+                date.substringAfter(".").substringBefore(".").toInt(),
+                date.substringBefore(".").toInt(),
+                time.substringBefore(":").toInt(),
+                time.substringAfter(":").toInt()
+            )
+        }
+        else if (date.isNotEmpty() && time.isEmpty()){
+            result = Date(
+                date.substringAfterLast(".").toInt(),
+                date.substringAfter(".").substringBefore(".").toInt(),
+                date.substringBefore(".").toInt()
+            )
+        }
+        return result
     }
 }

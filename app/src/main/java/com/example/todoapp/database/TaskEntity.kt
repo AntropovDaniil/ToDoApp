@@ -3,6 +3,7 @@ package com.example.todoapp.database
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.todoapp.enums.TaskPriority
 import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "task_table")
@@ -14,7 +15,7 @@ data class TaskEntity(
     val taskDescription: String = "",
     val taskDate: String = "",
     val taskTime: String = "",
-    val taskPriority: String = "low_priority",
+    val taskPriority: TaskPriority = TaskPriority.LOW_PRIORITY,
     val taskRemindFlag: Boolean = false,
     var taskDoneFlag: Boolean = false
 ): Parcelable

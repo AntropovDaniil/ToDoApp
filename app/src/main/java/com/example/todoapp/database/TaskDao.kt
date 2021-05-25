@@ -2,6 +2,7 @@ package com.example.todoapp.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
@@ -20,4 +21,7 @@ interface TaskDao {
 
     @Query("DELETE FROM task_table")
     suspend fun deleteAllTasks()
+
+    @Query("SELECT * FROM task_table WHERE taskName LIKE :query")
+    fun searchTask(query: String): Flow<List<TaskEntity>>
 }

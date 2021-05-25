@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todoapp.database.TaskEntity
 import com.example.todoapp.databinding.FragmentTaskDetailBinding
+import com.example.todoapp.enums.TaskPriority
 import com.example.todoapp.viewModels.TaskViewModel
 import java.util.*
 
@@ -54,8 +56,8 @@ class TaskDetailFragment : Fragment() {
         binding.taskTime.text = args.updatedTask.taskTime
 
         when(args.updatedTask.taskPriority){
-            "low_priority" -> binding.lowPriorityRb.isChecked = true
-            "medium_priority" -> binding.mediumPriorityRb.isChecked = true
+            TaskPriority.LOW_PRIORITY -> binding.lowPriorityRb.isChecked = true
+            TaskPriority.MEDIUM_PRIORITY -> binding.mediumPriorityRb.isChecked = true
             else -> binding.highPriorityRb.isChecked = true
         }
 
@@ -118,9 +120,9 @@ class TaskDetailFragment : Fragment() {
 
     private fun updateTask(){
         val taskPriority = when(binding.taskPriorityGroup.checkedRadioButtonId){
-            R.id.high_priority_rb -> "high_priority"
-            R.id.medium_priority_rb -> "medium_priority"
-            else -> "low_priority"
+            R.id.high_priority_rb -> TaskPriority.HIGH_PRIORITY
+            R.id.medium_priority_rb -> TaskPriority.MEDIUM_PRIORITY
+            else -> TaskPriority.LOW_PRIORITY
         }
         val updatedTask = TaskEntity(args.updatedTask.taskId,
             binding.taskName.text.toString(),

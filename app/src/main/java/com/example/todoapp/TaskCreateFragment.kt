@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.todoapp.database.TaskEntity
 import com.example.todoapp.databinding.FragmentTaskCreateBinding
 //import com.example.todoapp.models.Task
-import com.example.todoapp.models.TaskPriority
+import com.example.todoapp.enums.TaskPriority
 import com.example.todoapp.viewModels.TaskViewModel
 import com.example.todoapp.viewModels.TaskViewModelFactory
 import java.util.*
@@ -93,9 +93,9 @@ class TaskCreateFragment : Fragment() {
 
     private fun createTask(){
         val taskPriority = when(binding.taskPriorityGroup.checkedRadioButtonId){
-            R.id.high_priority_rb -> "high_priority"
-            R.id.medium_priority_rb -> "medium_priority"
-            else -> "low_priority"
+            R.id.high_priority_rb -> TaskPriority.HIGH_PRIORITY
+            R.id.medium_priority_rb -> TaskPriority.MEDIUM_PRIORITY
+            else -> TaskPriority.LOW_PRIORITY
         }
         val task = TaskEntity(0,
             binding.taskName.text.toString(),
