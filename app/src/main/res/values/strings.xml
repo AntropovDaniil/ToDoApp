@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">ToDoApp</string>
+
+    <string name="task_list_title">Current Tasks</string>
+    <string name="task_list_example">Mini Task</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_task">Create Task</string>
+    <string name="update_task">Update Task</string>
+    <string name="task_name_hint">Task</string>
+    <string name="task_desc_hint">Task description</string>
+    <string name="low_priority_task">Low Priority</string>
+    <string name="medium_priority_task">Medium Priority</string>
+    <string name="high_priority_task">High Priority</string>
+    <string name="task_date_title">Date</string>
+    <string name="task_date_hint">Date</string>
+    <string name="task_time_hint">Time</string>
+    <string name="task_remind_flag_title">Remind Me</string>
+    <string name="delete_menu_string">Delete</string>
+    <string name="delete_all_menu_string">Delete All</string>
+
+    <string name="checked_marker">Checked</string>
+    <string name="unchecked_marker">Unchecked</string>
+    <string name="search_task_menu">Search task</string>
+    <string name="sort_task_menu">Sort by</string>
+    <string name="sort_by_name_menu">Name</string>
+    <string name="sort_by_time_menu">Time</string>
+    <string name="sort_by_priority_menu">Priority</string>
+</resources>

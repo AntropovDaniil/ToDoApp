@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/search_menu"
+        android:title="@string/search_task_menu"
+        android:icon="@drawable/menu_search_icon"
+        app:showAsAction="ifRoom"
+        android:iconTint="@color/white"/>
+
+    <item android:id="@+id/sort_task"
+        android:title="@string/sort_task_menu"
+        android:icon="@drawable/menu_sort_icon"
+        android:iconTint="@color/white"
+        app:showAsAction="never">
+
+        <menu>
+            <item android:id="@+id/sort_by_name"
+                android:title="@string/sort_by_name_menu"/>
+            <item android:id="@+id/sort_by_time"
+                android:title="@string/sort_by_time_menu"/>
+            <item android:id="@+id/sort_by_priority"
+                android:title="@string/sort_by_priority_menu"/>
+
+
+        </menu>
+
+    </item>
+
+    <item android:id="@+id/delete_menu"
+        android:title="@string/delete_all_menu_string"
+        android:icon="@drawable/delete_icon"
+        android:iconTint="@color/white"
+        app:showAsAction="never"/>
+
+</menu>
