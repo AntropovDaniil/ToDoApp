@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:gravity="center"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:maxLines="8"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     app:layout_constraintTop_toBottomOf="@id/task_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>

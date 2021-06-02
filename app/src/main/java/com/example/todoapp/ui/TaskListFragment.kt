@@ -1,19 +1,25 @@
-package com.example.todoapp
+package com.example.todoapp.ui
 
 import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.todoapp.R
 import com.example.todoapp.adapters.TaskListAdapter
 import com.example.todoapp.databinding.FragmentTaskListBinding
 import com.example.todoapp.enums.SortMode
 import com.example.todoapp.viewModels.TaskViewModel
+import com.example.todoapp.worker.TaskWorker
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQueryTextListener{
@@ -21,7 +27,7 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
     private var _binding: FragmentTaskListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: TaskViewModel
+    private val viewModel: TaskViewModel by activityViewModels()
     private val adapter = TaskListAdapter()
 
     override fun onCreateView(
@@ -29,7 +35,6 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentTaskListBinding.inflate(layoutInflater, container, false)
-        viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
         val view = binding.root
 
         setFabAppearance()

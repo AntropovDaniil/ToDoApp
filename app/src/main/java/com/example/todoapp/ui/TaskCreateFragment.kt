@@ -1,4 +1,4 @@
-package com.example.todoapp
+package com.example.todoapp.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -9,8 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.todoapp.R
 import com.example.todoapp.database.TaskEntity
 import com.example.todoapp.databinding.FragmentTaskCreateBinding
 //import com.example.todoapp.models.Task
@@ -24,7 +26,7 @@ class TaskCreateFragment : Fragment() {
     private var _binding: FragmentTaskCreateBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: TaskViewModel
+    private val viewModel: TaskViewModel by activityViewModels()
     private lateinit var viewModelFactory: TaskViewModelFactory
 
     override fun onCreateView(
@@ -34,7 +36,6 @@ class TaskCreateFragment : Fragment() {
         _binding = FragmentTaskCreateBinding.inflate(inflater, container, false)
         val view = binding.root
         viewModelFactory = TaskViewModelFactory(requireActivity().application)
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(TaskViewModel::class.java)
 
         setCreateButtonListener()
         setDataChangeListener()

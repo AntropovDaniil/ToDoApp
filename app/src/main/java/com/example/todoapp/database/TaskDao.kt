@@ -24,4 +24,7 @@ interface TaskDao {
 
     @Query("SELECT * FROM task_table WHERE taskName LIKE :query")
     fun searchTask(query: String): Flow<List<TaskEntity>>
+
+    @Query("SELECT * FROM task_table ORDER BY taskId ASC")
+    fun getAllTasks(): List<TaskEntity>
 }

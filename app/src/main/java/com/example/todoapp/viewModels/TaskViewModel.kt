@@ -2,18 +2,24 @@ package com.example.todoapp.viewModels
 
 import android.app.Application
 import androidx.lifecycle.*
+import androidx.work.*
 import com.example.todoapp.database.TaskDatabase
 import com.example.todoapp.database.TaskEntity
 import com.example.todoapp.database.TaskRepository
 import com.example.todoapp.enums.SortMode
+import com.example.todoapp.worker.TaskWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class TaskViewModel(application: Application): AndroidViewModel(application) {
 
     var readAllTasks: LiveData<List<TaskEntity>>
+    private var taskList: List<TaskEntity>
     private val repository: TaskRepository
+
+    private val workManager: WorkManager = WorkManager.getInstance(application)
 
     var sortMode = SortMode.SORT_NO_MODE
 
@@ -21,6 +27,8 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
         val taskDao = TaskDatabase.getDatabase(application.applicationContext).taskDao()
         repository = TaskRepository(taskDao)
         readAllTasks = repository.readAllTasks
+        taskList = readAllTasks.value ?: emptyList()
+        launchWorker()
     }
 
     fun addTask(task: TaskEntity){
@@ -61,6 +69,25 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
         if (minute.toString().length == 1) {
             return "$hour:0$minute"
         } else return "$hour:$minute"
+    }
+
+    fun launchWorker(){
+        workManager
+            .enqueue(buildWorkerRequest())
+    }
+
+    private fun buildWorkerRequest() : WorkRequest{
+        val constraints = Constraints.Builder()
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        val taskWorkerRequest: WorkRequest = PeriodicWorkRequestBuilder<TaskWorker>(15, TimeUnit.MINUTES)
+            .addTag("TaskWorker")
+            .setInitialDelay(10, TimeUnit.SECONDS)
+            .setConstraints(constraints)
+            .build()
+
+        return taskWorkerRequest
     }
 
 }

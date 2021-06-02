@@ -1,17 +1,18 @@
-package com.example.todoapp
+package com.example.todoapp.ui
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.todoapp.R
 import com.example.todoapp.database.TaskEntity
 import com.example.todoapp.databinding.FragmentTaskDetailBinding
 import com.example.todoapp.enums.TaskPriority
@@ -25,7 +26,7 @@ class TaskDetailFragment : Fragment() {
     private var _binding: FragmentTaskDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: TaskViewModel by viewModels()
+    private val viewModel: TaskViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -156,9 +157,7 @@ class TaskDetailFragment : Fragment() {
             Toast.makeText(requireContext(), "Task deleted", Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.navigateToTaskListFragmentFromDetail)
         })
-
         builder.setNegativeButton("No", {_, _ ->
-
         })
         builder.setTitle("Task deletion ")
         builder.setMessage("Delete this task?")

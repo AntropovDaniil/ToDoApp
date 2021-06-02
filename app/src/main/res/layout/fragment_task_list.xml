@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".TaskListFragment">
+    tools:context=".ui.TaskListFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
