@@ -19,6 +19,7 @@ import com.example.todoapp.databinding.TaskItemLayoutBinding
 import com.example.todoapp.enums.SortMode
 import com.example.todoapp.enums.TaskPriority
 import com.example.todoapp.ui.TaskListFragmentDirections
+import com.example.todoapp.utils.taskTimeCompareMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -133,24 +134,4 @@ class TaskListAdapter(): RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder
         notifyDataSetChanged()
     }
 
-    private fun taskTimeCompareMap(date: String, time: String): Date{
-        var result = Date()
-        if (date.isNotEmpty() && time.isNotEmpty()){
-            result = Date(
-                date.substringAfterLast(".").toInt(),
-                date.substringAfter(".").substringBefore(".").toInt(),
-                date.substringBefore(".").toInt(),
-                time.substringBefore(":").toInt(),
-                time.substringAfter(":").toInt()
-            )
-        }
-        else if (date.isNotEmpty() && time.isEmpty()){
-            result = Date(
-                date.substringAfterLast(".").toInt(),
-                date.substringAfter(".").substringBefore(".").toInt(),
-                date.substringBefore(".").toInt()
-            )
-        }
-        return result
-    }
 }

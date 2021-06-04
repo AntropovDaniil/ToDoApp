@@ -17,9 +17,7 @@
             android:id="@+id/navigateToTaskCreateFragment"
             app:destination="@id/taskCreateFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popUpTo="@id/taskListFragment"
-            app:popUpToInclusive="false" />
+            app:popEnterAnim="@android:anim/slide_in_left"/>
     </fragment>
     <fragment
         android:id="@+id/taskDetailFragment"
@@ -28,7 +26,9 @@
         tools:layout="@layout/fragment_task_detail" >
         <action
             android:id="@+id/navigateToTaskListFragmentFromDetail"
-            app:destination="@id/taskListFragment" />
+            app:destination="@id/taskListFragment"
+            app:popUpTo="@id/navigateToTaskListFragment"
+            app:popUpToInclusive="true"/>
         <argument
             android:name="updated_task"
             app:argType="com.example.todoapp.database.TaskEntity" />
@@ -40,6 +40,8 @@
         tools:layout="@layout/fragment_task_create" >
         <action
             android:id="@+id/navigateToTaskListFragment"
-            app:destination="@id/taskListFragment" />
+            app:destination="@id/taskListFragment"
+            app:popUpTo="@id/navigateToTaskListFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>
