@@ -27,5 +27,9 @@
     <string name="sort_by_time_menu">Time</string>
     <string name="sort_by_priority_menu">Priority</string>
     <string name="background_text_title">No tasks yet</string>
+    <string name="layout_type_title">Appearance</string>
+    <string name="grid_layout_title">Grid</string>
+    <string name="linear_layout_title">Linear</string>
+
     <string name="background_text">No tasks in your list. \n Add your first ToDo.</string>
 </resources>

@@ -23,14 +23,13 @@ import com.example.todoapp.utils.taskTimeCompareMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
 class TaskListAdapter(): RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder>() {
 
     private var _rvBinding: TaskItemLayoutBinding? = null
     private val rvBinding: TaskItemLayoutBinding get() = _rvBinding!!
 
-    private var taskList = emptyList<TaskEntity>()
+    var taskList = emptyList<TaskEntity>()
     private lateinit var repository: TaskRepository
 
     inner class TaskListViewHolder(val binding: TaskItemLayoutBinding): RecyclerView.ViewHolder(binding.root)

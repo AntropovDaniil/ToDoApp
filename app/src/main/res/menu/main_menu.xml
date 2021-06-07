@@ -23,8 +23,22 @@
                 android:title="@string/sort_by_time_menu"/>
             <item android:id="@+id/sort_by_priority"
                 android:title="@string/sort_by_priority_menu"/>
+        </menu>
+
+    </item>
 
 
+    <item android:id="@+id/layout_type"
+        android:title="@string/layout_type_title"
+        android:icon="@drawable/menu_sort_icon"
+        android:iconTint="@color/white"
+        app:showAsAction="never">
+
+        <menu>
+            <item android:id="@+id/grid_list"
+                android:title="@string/grid_layout_title"/>
+            <item android:id="@+id/linear_list"
+                android:title="@string/linear_layout_title"/>
         </menu>
 
     </item>
@@ -34,5 +48,6 @@
         android:icon="@drawable/delete_icon"
         android:iconTint="@color/white"
         app:showAsAction="never"/>
+
 
 </menu>

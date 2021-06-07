@@ -24,11 +24,6 @@
         android:name="com.example.todoapp.ui.TaskDetailFragment"
         android:label="Task Detail"
         tools:layout="@layout/fragment_task_detail" >
-        <action
-            android:id="@+id/navigateToTaskListFragmentFromDetail"
-            app:destination="@id/taskListFragment"
-            app:popUpTo="@id/navigateToTaskListFragment"
-            app:popUpToInclusive="true"/>
         <argument
             android:name="updated_task"
             app:argType="com.example.todoapp.database.TaskEntity" />
@@ -37,11 +32,5 @@
         android:id="@+id/taskCreateFragment"
         android:name="com.example.todoapp.ui.TaskCreateFragment"
         android:label="New Task"
-        tools:layout="@layout/fragment_task_create" >
-        <action
-            android:id="@+id/navigateToTaskListFragment"
-            app:destination="@id/taskListFragment"
-            app:popUpTo="@id/navigateToTaskListFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
+        tools:layout="@layout/fragment_task_create" />
 </navigation>

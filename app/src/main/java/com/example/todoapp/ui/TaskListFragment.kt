@@ -11,6 +11,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.todoapp.R
 import com.example.todoapp.adapters.TaskListAdapter
@@ -29,6 +32,7 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
 
     private val viewModel: TaskViewModel by activityViewModels()
     private val adapter = TaskListAdapter()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,6 +81,12 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
             R.id.sort_by_priority -> {
                 viewModel.sortMode = SortMode.SORT_BY_PRIORITY
             }
+            R.id.grid_list -> {
+                binding.taskListRv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            }
+            R.id.linear_list -> {
+                binding.taskListRv.layoutManager = LinearLayoutManager(context)
+            }
         }
         adapter.sortTaskList(viewModel.sortMode)
 
@@ -95,6 +105,8 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
             adapter.setData(it)
             adapter.sortTaskList(viewModel.sortMode)
         })
+
+        initSwipeListener()
     }
 
     private fun setFabAppearance(){
@@ -142,5 +154,26 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
             searchTask(query)
         }
         return true
+    }
+
+    private fun initSwipeListener(){
+        val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                viewModel.deleteTask(adapter.taskList[position])
+                adapter.notifyItemRemoved(position)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(simpleCallback)
+        itemTouchHelper.attachToRecyclerView(binding.taskListRv)
     }
 }

@@ -44,7 +44,6 @@ class TaskWorker(context: Context, workerParams: WorkerParameters): Worker(conte
 
 
             taskList = getTaskList()
-            Log.d(TASK_WORKER_TAG, "TaskList from doWork: ${taskList}")
             if(taskList.isNotEmpty()) {
                 checkTaskDate(taskList)
             }
@@ -70,6 +69,7 @@ class TaskWorker(context: Context, workerParams: WorkerParameters): Worker(conte
         for (task in taskList.sortedByDescending { taskTimeCompareMap(it.taskDate, it.taskTime) }){
             Log.d(TASK_WORKER_TAG, "TaskName: ${task.taskName} taskDate: ${task.taskDate}")
             if (task.taskDate.isEmpty() || task.taskDoneFlag || !task.taskRemindFlag) continue
+
             if (task.taskDate.isNotEmpty() && task.taskTime.isNotEmpty()) {
                 dayOfMonth = task.taskDate.substringBefore(".").toInt()
                 month = task.taskDate.substringAfter(".").substringBefore(".").toInt()
@@ -141,7 +141,7 @@ class TaskWorker(context: Context, workerParams: WorkerParameters): Worker(conte
         val intent = Intent(applicationContext, MainActivity::class.java)
         val pendingIntent: PendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, 0)
 
-        val message = if (dateDiff<24) "You have task today!" else "Your have task in ${(dateDiff/24)} days"
+        val message = if (dateDiff>24) "Your have task in ${(dateDiff/24)} days" else "You have nearest task!"
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setContentTitle(taskName)
             .setContentText(message)

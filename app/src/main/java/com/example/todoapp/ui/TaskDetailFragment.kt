@@ -106,7 +106,7 @@ class TaskDetailFragment : Fragment() {
         binding.taskUpdateBtn.setOnClickListener {
             if (checkInputData()) {
                 updateTask()
-                findNavController().navigate(R.id.navigateToTaskListFragmentFromDetail)
+                findNavController().navigateUp()//.navigate(R.id.navigateToTaskListFragmentFromDetail)
             }
             else {
                 binding.taskName.error = "Invalid Data"
@@ -155,7 +155,7 @@ class TaskDetailFragment : Fragment() {
         builder.setPositiveButton("Yes", {_, _ ->
             viewModel.deleteTask(args.updatedTask)
             Toast.makeText(requireContext(), "Task deleted", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.navigateToTaskListFragmentFromDetail)
+            findNavController().navigateUp()
         })
         builder.setNegativeButton("No", {_, _ ->
         })

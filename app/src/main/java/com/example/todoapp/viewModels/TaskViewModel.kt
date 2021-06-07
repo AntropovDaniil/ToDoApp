@@ -81,7 +81,7 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
             .setRequiresBatteryNotLow(true)
             .build()
 
-        val taskWorkerRequest: WorkRequest = PeriodicWorkRequestBuilder<TaskWorker>(1, TimeUnit.DAYS)
+        val taskWorkerRequest: WorkRequest = PeriodicWorkRequestBuilder<TaskWorker>(1, TimeUnit.DAYS, 4, TimeUnit.HOURS)
             .addTag("TaskWorker")
             .setInitialDelay(10, TimeUnit.SECONDS)
             .setConstraints(constraints)

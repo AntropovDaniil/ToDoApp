@@ -79,10 +79,10 @@ class TaskCreateFragment : Fragment() {
         binding.taskCreateBtn.setOnClickListener {
             if (checkInputData()) {
                 createTask()
-                findNavController().navigate(R.id.navigateToTaskListFragment)
+                findNavController().navigateUp()
             }
             else {
-                binding.taskName.error = "Invalid Data" //setHintTextColor(resources.getColor(R.color.error_color))
+                binding.taskName.error = "Invalid Data"
                 binding.taskName.requestFocus()
             }
         }
