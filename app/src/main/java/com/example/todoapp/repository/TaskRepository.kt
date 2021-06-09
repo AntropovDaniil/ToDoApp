@@ -1,8 +1,9 @@
-package com.example.todoapp.database
+package com.example.todoapp.repository
 
 import androidx.lifecycle.LiveData
+import com.example.todoapp.database.TaskDao
+import com.example.todoapp.database.TaskEntity
 import kotlinx.coroutines.flow.Flow
-import org.w3c.dom.Entity
 
 class TaskRepository(private val taskDao: TaskDao) {
 

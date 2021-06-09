@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
-import android.opengl.Visibility
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
 import com.example.todoapp.database.TaskDatabase
 import com.example.todoapp.database.TaskEntity
-import com.example.todoapp.database.TaskRepository
+import com.example.todoapp.repository.TaskRepository
 import com.example.todoapp.databinding.TaskItemLayoutBinding
 import com.example.todoapp.enums.SortMode
 import com.example.todoapp.enums.TaskPriority

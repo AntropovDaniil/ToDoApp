@@ -2,14 +2,15 @@ package com.example.todoapp.viewModels
 
 import android.app.Application
 import androidx.lifecycle.*
+import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
 import com.example.todoapp.database.TaskDatabase
 import com.example.todoapp.database.TaskEntity
-import com.example.todoapp.database.TaskRepository
+import com.example.todoapp.repository.TaskRepository
 import com.example.todoapp.enums.SortMode
+import com.example.todoapp.repository.DataStoreRepository
 import com.example.todoapp.worker.TaskWorker
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -19,9 +20,15 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
     private var taskList: List<TaskEntity>
     private val repository: TaskRepository
 
+    private val dataStoreRepository = DataStoreRepository(application.applicationContext)
+
+    val readSortMode = dataStoreRepository.readSortMode().asLiveData()
+    val readLayoutType = dataStoreRepository.readLayoutType().asLiveData()
+
     private val workManager: WorkManager = WorkManager.getInstance(application)
 
     var sortMode = SortMode.SORT_NO_MODE
+
 
     init {
         val taskDao = TaskDatabase.getDatabase(application.applicationContext).taskDao()
@@ -81,7 +88,7 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
             .setRequiresBatteryNotLow(true)
             .build()
 
-        val taskWorkerRequest: WorkRequest = PeriodicWorkRequestBuilder<TaskWorker>(1, TimeUnit.DAYS, 4, TimeUnit.HOURS)
+        val taskWorkerRequest: WorkRequest = PeriodicWorkRequestBuilder<TaskWorker>(12, TimeUnit.HOURS, 1, TimeUnit.HOURS)
             .addTag("TaskWorker")
             .setInitialDelay(10, TimeUnit.SECONDS)
             .setConstraints(constraints)
@@ -89,5 +96,27 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
 
         return taskWorkerRequest
     }
+
+    fun saveSortMode(sortMode: SortMode){
+        viewModelScope.launch(Dispatchers.IO) {
+            when (sortMode) {
+                SortMode.SORT_NO_MODE -> dataStoreRepository.saveSortMode("SORT_NO_MODE")
+                SortMode.SORT_BY_TIME -> dataStoreRepository.saveSortMode("SORT_BY_TIME")
+                SortMode.SORT_BY_PRIORITY -> dataStoreRepository.saveSortMode("SORT_BY_PRIORITY")
+                SortMode.SORT_BY_NAME -> dataStoreRepository.saveSortMode("SORT_BY_NAME")
+            }
+        }
+    }
+
+    fun saveLayoutType(layoutType: String){
+        viewModelScope.launch(Dispatchers.IO){
+            when(layoutType){
+                "LINEAR" -> dataStoreRepository.saveLayoutType("LINEAR")
+                else -> dataStoreRepository.saveLayoutType("GRID")
+            }
+        }
+    }
+
+
 
 }

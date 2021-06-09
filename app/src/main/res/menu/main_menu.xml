@@ -17,6 +17,8 @@
         app:showAsAction="never">
 
         <menu>
+            <item android:id="@+id/sort_by_creating"
+                android:title="@string/sort_by_creating"/>
             <item android:id="@+id/sort_by_name"
                 android:title="@string/sort_by_name_menu"/>
             <item android:id="@+id/sort_by_time"

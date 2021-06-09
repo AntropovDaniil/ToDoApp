@@ -73,4 +73,8 @@ dependencies {
     def work_version = "2.5.0"
     implementation("androidx.work:work-runtime:$work_version")
     implementation("androidx.work:work-runtime-ktx:$work_version")
+
+    // Preferences DataStore
+    implementation("androidx.datastore:datastore:1.0.0-beta01")
+    implementation("androidx.datastore:datastore-preferences:1.0.0-beta01")
 }

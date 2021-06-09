@@ -1,11 +1,15 @@
 package com.example.todoapp.ui
 
 import android.app.AlertDialog
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -34,8 +38,7 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
     private val adapter = TaskListAdapter()
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentTaskListBinding.inflate(layoutInflater, container, false)
@@ -44,6 +47,7 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
         setFabAppearance()
         initNavigation()
         initRecyclerView()
+        setSortMode()
 
         setHasOptionsMenu(true)
 
@@ -72,20 +76,29 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
                 deleteAllTasks()
                 binding.emptyListBackground.visibility = View.VISIBLE
             }
+            R.id.sort_by_creating -> {
+                viewModel.sortMode = SortMode.SORT_NO_MODE
+                viewModel.saveSortMode(SortMode.SORT_NO_MODE)
+            }
             R.id.sort_by_name -> {
                 viewModel.sortMode = SortMode.SORT_BY_NAME
+                viewModel.saveSortMode(SortMode.SORT_BY_NAME)
             }
             R.id.sort_by_time -> {
                 viewModel.sortMode = SortMode.SORT_BY_TIME
+                viewModel.saveSortMode(SortMode.SORT_BY_TIME)
             }
             R.id.sort_by_priority -> {
                 viewModel.sortMode = SortMode.SORT_BY_PRIORITY
+                viewModel.saveSortMode(SortMode.SORT_BY_PRIORITY)
             }
             R.id.grid_list -> {
                 binding.taskListRv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                viewModel.saveLayoutType("GRID")
             }
             R.id.linear_list -> {
                 binding.taskListRv.layoutManager = LinearLayoutManager(context)
+                viewModel.saveLayoutType("LINEAR")
             }
         }
         adapter.sortTaskList(viewModel.sortMode)
@@ -95,6 +108,14 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
 
 
     private fun initRecyclerView(){
+        viewModel.readLayoutType.observe(viewLifecycleOwner, Observer {
+            if (it.isNotEmpty()){
+                when(it){
+                    "LINEAR" -> binding.taskListRv.layoutManager = LinearLayoutManager(context)
+                    else -> binding.taskListRv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                }
+            }
+        })
         binding.taskListRv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         binding.taskListRv.adapter = adapter
 
@@ -107,6 +128,20 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
         })
 
         initSwipeListener()
+    }
+
+    private fun setSortMode() {
+        viewModel.readSortMode.observe(viewLifecycleOwner, Observer {
+            if (it.isNotEmpty()){
+                when(it){
+                    "SORT_NO_MODE" -> viewModel.sortMode = SortMode.SORT_NO_MODE
+                    "SORT_BY_TIME" -> viewModel.sortMode = SortMode.SORT_BY_TIME
+                    "SORT_BY_PRIORITY" -> viewModel.sortMode = SortMode.SORT_BY_PRIORITY
+                    "SORT_BY_NAME" -> viewModel.sortMode = SortMode.SORT_BY_NAME
+                }
+            }
+            adapter.sortTaskList(viewModel.sortMode)
+        })
     }
 
     private fun setFabAppearance(){

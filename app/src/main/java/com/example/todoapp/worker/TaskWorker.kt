@@ -9,13 +9,12 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.todoapp.R
 import com.example.todoapp.database.TaskDatabase
 import com.example.todoapp.database.TaskEntity
-import com.example.todoapp.database.TaskRepository
+import com.example.todoapp.repository.TaskRepository
 import com.example.todoapp.ui.MainActivity
 import com.example.todoapp.utils.taskTimeCompareMap
 import java.lang.Exception
