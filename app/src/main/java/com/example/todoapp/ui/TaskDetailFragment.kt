@@ -3,11 +3,14 @@ package com.example.todoapp.ui
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -32,14 +35,14 @@ class TaskDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentTaskDetailBinding.inflate(inflater, container, false)
         val view = binding.root
 
         setArgs()
         setUpdateButtonListener()
+        setBackPressedCallback()
+        setupSaveTaskDialogFragmentListener()
 
-        // add menu with delete function
         setHasOptionsMenu(true)
 
         return view
@@ -162,6 +165,56 @@ class TaskDetailFragment : Fragment() {
         builder.setTitle("Task deletion ")
         builder.setMessage("Delete this task?")
         builder.create().show()
+    }
+
+    private fun isTaskChanged(): Boolean{
+        return !(binding.taskName.text.toString() == args.updatedTask.taskName &&
+                binding.taskDescription.text.toString() == args.updatedTask.taskDescription &&
+                binding.taskDate.text.toString() == args.updatedTask.taskDate &&
+                binding.taskTime.text.toString() == args.updatedTask.taskTime &&
+                getTaskPriority() == args.updatedTask.taskPriority &&
+                binding.taskRemindSwitch.isChecked == args.updatedTask.taskRemindFlag)
+    }
+
+    private fun setBackPressedCallback(){
+        val backCallback = object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                if (isTaskChanged() && binding.taskName.text.toString().isNotEmpty())
+                    showAlertDialog()
+                else
+                    findNavController().navigateUp()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(backCallback)
+    }
+
+    private fun getTaskPriority(): TaskPriority{
+        when{
+            binding.lowPriorityRb.isChecked -> return TaskPriority.LOW_PRIORITY
+            binding.mediumPriorityRb.isChecked -> return TaskPriority.MEDIUM_PRIORITY
+            else -> return TaskPriority.HIGH_PRIORITY
+        }
+    }
+
+    private fun showAlertDialog() {
+        val dialogFragment = SaveTaskDialogFragment()
+        dialogFragment.show(parentFragmentManager, SaveTaskDialogFragment.TAG)
+    }
+
+    private fun setupSaveTaskDialogFragmentListener(){
+        parentFragmentManager.setFragmentResultListener(SaveTaskDialogFragment.REQUEST_KEY,
+            viewLifecycleOwner,
+            FragmentResultListener { _, result ->
+                val which = result.getInt(SaveTaskDialogFragment.KEY_RESPONSE)
+                when(which){
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        updateTask()
+                        findNavController().navigateUp()
+                    }
+                    DialogInterface.BUTTON_NEGATIVE -> findNavController().navigateUp()
+                    DialogInterface.BUTTON_NEUTRAL -> {}
+                }
+            })
     }
 
 

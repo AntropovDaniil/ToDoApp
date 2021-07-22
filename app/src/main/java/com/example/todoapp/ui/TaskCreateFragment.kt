@@ -1,7 +1,9 @@
 package com.example.todoapp.ui
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
@@ -9,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -19,6 +23,7 @@ import com.example.todoapp.databinding.FragmentTaskCreateBinding
 import com.example.todoapp.enums.TaskPriority
 import com.example.todoapp.viewModels.TaskViewModel
 import com.example.todoapp.viewModels.TaskViewModelFactory
+import kotlinx.coroutines.runBlocking
 import java.util.*
 
 class TaskCreateFragment : Fragment() {
@@ -28,6 +33,8 @@ class TaskCreateFragment : Fragment() {
 
     private val viewModel: TaskViewModel by activityViewModels()
     private lateinit var viewModelFactory: TaskViewModelFactory
+
+    private var isTaskSaved: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +46,8 @@ class TaskCreateFragment : Fragment() {
 
         setCreateButtonListener()
         setDataChangeListener()
+        setBackPressedCallback()
+        setupSaveTaskDialogFragmentListener()
 
         return view
     }
@@ -47,6 +56,7 @@ class TaskCreateFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 
     private fun setDataChangeListener(){
         binding.taskDate.setOnClickListener {
@@ -109,5 +119,40 @@ class TaskCreateFragment : Fragment() {
         viewModel.addTask(task)
 
         Toast.makeText(requireContext(), "Task created", Toast.LENGTH_SHORT).show()
+        isTaskSaved = true
+    }
+
+
+    private fun setBackPressedCallback(){
+        val backCallback = object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                if (isTaskSaved == false && binding.taskName.text.toString().isNotEmpty())
+                    showAlertDialog()
+                else
+                    findNavController().navigateUp()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(backCallback)
+    }
+
+    private fun showAlertDialog() {
+        val dialogFragment = SaveTaskDialogFragment()
+        dialogFragment.show(parentFragmentManager, SaveTaskDialogFragment.TAG)
+    }
+
+    private fun setupSaveTaskDialogFragmentListener(){
+        parentFragmentManager.setFragmentResultListener(SaveTaskDialogFragment.REQUEST_KEY,
+            viewLifecycleOwner,
+            FragmentResultListener { _, result ->
+                val which = result.getInt(SaveTaskDialogFragment.KEY_RESPONSE)
+                when(which){
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        createTask()
+                        findNavController().navigateUp()
+                    }
+                    DialogInterface.BUTTON_NEGATIVE -> findNavController().navigateUp()
+                    DialogInterface.BUTTON_NEUTRAL -> {}
+                }
+            })
     }
 }

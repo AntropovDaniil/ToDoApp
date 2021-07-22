@@ -54,7 +54,6 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
         return view
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

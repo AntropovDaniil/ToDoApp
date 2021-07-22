@@ -33,4 +33,15 @@
     <string name="linear_layout_title">Linear</string>
 
     <string name="background_text">No tasks in your list. \n Add your first ToDo.</string>
+
+
+    <!-- Dialog Fragment-->
+    <string name="dialogTitle">Save changes</string>
+    <string name="dialogMessage">Do you want to save changes?</string>
+    <string name="positiveButton">Yes</string>
+    <string name="negativeButton">No</string>
+    <string name="neutralButton">Cancel</string>
+
+
+
 </resources>
