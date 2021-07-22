@@ -14,7 +14,7 @@ import com.example.todoapp.R
 import com.example.todoapp.database.TaskDatabase
 import com.example.todoapp.database.TaskEntity
 import com.example.todoapp.repository.TaskRepository
-import com.example.todoapp.databinding.TaskItemLayoutHorizontalBinding
+import com.example.todoapp.databinding.TaskItemLayoutBinding
 import com.example.todoapp.enums.SortMode
 import com.example.todoapp.enums.TaskPriority
 import com.example.todoapp.ui.TaskListFragmentDirections
@@ -25,19 +25,19 @@ import kotlinx.coroutines.launch
 
 class TaskListAdapter: RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder>() {
 
-    private var _rvBinding: TaskItemLayoutHorizontalBinding? = null
-    private val rvBinding: TaskItemLayoutHorizontalBinding get() = _rvBinding!!
+    private var _rvBinding: TaskItemLayoutBinding? = null
+    private val rvBinding: TaskItemLayoutBinding get() = _rvBinding!!
 
     var taskList = emptyList<TaskEntity>()
     private lateinit var repository: TaskRepository
 
-    inner class TaskListViewHolder(val binding: TaskItemLayoutHorizontalBinding): RecyclerView.ViewHolder(binding.root)
+    inner class TaskListViewHolder(val binding: TaskItemLayoutBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): TaskListAdapter.TaskListViewHolder {
-        _rvBinding = TaskItemLayoutHorizontalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        _rvBinding = TaskItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         initRepository(parent.context)
 
