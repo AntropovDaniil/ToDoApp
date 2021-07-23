@@ -12,23 +12,23 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.todoapp.R
+import com.example.todoapp.database.TaskDao
 import com.example.todoapp.database.TaskDatabase
 import com.example.todoapp.database.TaskEntity
 import com.example.todoapp.repository.TaskRepository
 import com.example.todoapp.ui.MainActivity
 import com.example.todoapp.utils.taskTimeCompareMap
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.lang.Exception
 import java.util.*
+import javax.inject.Inject
 
-class TaskWorker(context: Context, workerParams: WorkerParameters): Worker(context, workerParams) {
+class TaskWorker @Inject constructor(
+    @ApplicationContext context: Context,
+    private val repository: TaskRepository,
+    workerParams: WorkerParameters): Worker(context, workerParams) {
 
-    private val repository: TaskRepository
     private var taskList: List<TaskEntity> = emptyList()
-
-    init {
-        val taskDao = TaskDatabase.getDatabase(context).taskDao()
-        repository = TaskRepository(taskDao)
-    }
 
     companion object{
         const val TASK_WORKER_TAG = "TaskWorkerDate"

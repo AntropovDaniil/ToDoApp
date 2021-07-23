@@ -25,17 +25,19 @@ import com.example.todoapp.databinding.FragmentTaskListBinding
 import com.example.todoapp.enums.SortMode
 import com.example.todoapp.viewModels.TaskViewModel
 import com.example.todoapp.worker.TaskWorker
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQueryTextListener{
 
     private var _binding: FragmentTaskListBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: TaskViewModel by activityViewModels()
-    private val adapter = TaskListAdapter()
+    @Inject lateinit var adapter: TaskListAdapter
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

@@ -20,8 +20,10 @@ import com.example.todoapp.database.TaskEntity
 import com.example.todoapp.databinding.FragmentTaskDetailBinding
 import com.example.todoapp.enums.TaskPriority
 import com.example.todoapp.viewModels.TaskViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+@AndroidEntryPoint
 class TaskDetailFragment : Fragment() {
 
     private val args by navArgs<TaskDetailFragmentArgs>()

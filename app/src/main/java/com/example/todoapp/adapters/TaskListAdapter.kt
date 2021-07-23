@@ -22,14 +22,15 @@ import com.example.todoapp.utils.taskTimeCompareMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TaskListAdapter: RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder>() {
+class TaskListAdapter @Inject constructor(private val repository: TaskRepository)
+    : RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder>() {
 
     private var _rvBinding: TaskItemLayoutBinding? = null
     private val rvBinding: TaskItemLayoutBinding get() = _rvBinding!!
 
     var taskList = emptyList<TaskEntity>()
-    private lateinit var repository: TaskRepository
 
     inner class TaskListViewHolder(val binding: TaskItemLayoutBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -38,8 +39,6 @@ class TaskListAdapter: RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder>(
         viewType: Int
     ): TaskListAdapter.TaskListViewHolder {
         _rvBinding = TaskItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
-        initRepository(parent.context)
 
         return TaskListViewHolder(rvBinding)
     }
@@ -81,11 +80,6 @@ class TaskListAdapter: RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder>(
         return taskList.size
     }
 
-
-    private fun initRepository(context: Context){
-        val taskDao = TaskDatabase.getDatabase(context).taskDao()
-        repository = TaskRepository(taskDao)
-    }
 
     fun setData(tasks: List<TaskEntity>){
         taskList = tasks

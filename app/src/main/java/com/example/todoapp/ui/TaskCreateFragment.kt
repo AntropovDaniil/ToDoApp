@@ -1,6 +1,5 @@
 package com.example.todoapp.ui
 
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.DialogInterface
@@ -14,25 +13,22 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.todoapp.R
 import com.example.todoapp.database.TaskEntity
 import com.example.todoapp.databinding.FragmentTaskCreateBinding
-//import com.example.todoapp.models.Task
 import com.example.todoapp.enums.TaskPriority
 import com.example.todoapp.viewModels.TaskViewModel
-import com.example.todoapp.viewModels.TaskViewModelFactory
-import kotlinx.coroutines.runBlocking
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+@AndroidEntryPoint
 class TaskCreateFragment : Fragment() {
 
     private var _binding: FragmentTaskCreateBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: TaskViewModel by activityViewModels()
-    private lateinit var viewModelFactory: TaskViewModelFactory
 
     private var isTaskSaved: Boolean = false
 
@@ -42,7 +38,6 @@ class TaskCreateFragment : Fragment() {
     ): View? {
         _binding = FragmentTaskCreateBinding.inflate(inflater, container, false)
         val view = binding.root
-        viewModelFactory = TaskViewModelFactory(requireActivity().application)
 
         setCreateButtonListener()
         setDataChangeListener()

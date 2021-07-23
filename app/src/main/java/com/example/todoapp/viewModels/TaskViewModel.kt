@@ -10,17 +10,19 @@ import com.example.todoapp.repository.TaskRepository
 import com.example.todoapp.enums.SortMode
 import com.example.todoapp.repository.DataStoreRepository
 import com.example.todoapp.worker.TaskWorker
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class TaskViewModel(application: Application): AndroidViewModel(application) {
+@HiltViewModel
+class TaskViewModel @Inject constructor(private val repository: TaskRepository,
+                                        private val dataStoreRepository: DataStoreRepository,
+                                        application: Application): AndroidViewModel(application) {
 
     var readAllTasks: LiveData<List<TaskEntity>>
     private var taskList: List<TaskEntity>
-    private val repository: TaskRepository
-
-    private val dataStoreRepository = DataStoreRepository(application.applicationContext)
 
     val readSortMode = dataStoreRepository.readSortMode().asLiveData()
     val readLayoutType = dataStoreRepository.readLayoutType().asLiveData()
@@ -31,8 +33,6 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
 
 
     init {
-        val taskDao = TaskDatabase.getDatabase(application.applicationContext).taskDao()
-        repository = TaskRepository(taskDao)
         readAllTasks = repository.readAllTasks
         taskList = readAllTasks.value ?: emptyList()
         launchWorker()
