@@ -68,8 +68,8 @@ class TaskViewModel @Inject constructor(private val repository: TaskRepository,
 
     fun setTaskDate(year: Int, month: Int, day: Int): String{
         if (month.toString().length == 1) {
-            return "$day.0$month.$year"
-        } else return "$day.$month.$year"
+            return "$day.0${month+1}.$year"
+        } else return "$day.${month+1}.$year"
     }
 
     fun setTaskTime(hour: Int, minute: Int): String{
@@ -78,7 +78,7 @@ class TaskViewModel @Inject constructor(private val repository: TaskRepository,
         } else return "$hour:$minute"
     }
 
-    fun launchWorker(){
+    private fun launchWorker(){
         workManager
             .enqueue(buildWorkerRequest())
     }

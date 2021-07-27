@@ -44,4 +44,11 @@
 
 
 
+    <!-- Notification -->
+    <string name="update_action">Update</string>
+    <string name="delete_action">Delete</string>
+
+
+
+
 </resources>

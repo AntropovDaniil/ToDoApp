@@ -1,5 +1,6 @@
 package com.example.todoapp.worker
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,6 +10,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.todoapp.R
@@ -40,7 +42,6 @@ class TaskWorker @Inject constructor(
         return try{
             Log.d(TASK_WORKER_TAG, "Worker started")
             createNotificationChannel()
-
 
             taskList = getTaskList()
             if(taskList.isNotEmpty()) {
@@ -112,7 +113,6 @@ class TaskWorker @Inject constructor(
                 description = descriptionText
             }
             channel.setSound(null, null)
-            // Register the channel with the system
             val manager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
         }
@@ -129,6 +129,7 @@ class TaskWorker @Inject constructor(
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(pendingIntent)
             .build()
 

@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -112,6 +113,7 @@ class TaskCreateFragment : Fragment() {
             binding.taskRemindSwitch.isChecked
         )
         viewModel.addTask(task)
+        Log.d("TASK_TAG", task.toString())
 
         Toast.makeText(requireContext(), "Task created", Toast.LENGTH_SHORT).show()
         isTaskSaved = true
