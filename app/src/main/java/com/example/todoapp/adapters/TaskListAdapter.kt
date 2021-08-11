@@ -18,6 +18,7 @@ import com.example.todoapp.databinding.TaskItemLayoutBinding
 import com.example.todoapp.enums.SortMode
 import com.example.todoapp.enums.TaskPriority
 import com.example.todoapp.ui.TaskListFragmentDirections
+import com.example.todoapp.utils.taskDateCompare
 import com.example.todoapp.utils.taskTimeCompareMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +32,7 @@ class TaskListAdapter @Inject constructor(private val repository: TaskRepository
     private val rvBinding: TaskItemLayoutBinding get() = _rvBinding!!
 
     var taskList = emptyList<TaskEntity>()
+    var adapterSortMode = SortMode.SORT_BY_ID
 
     inner class TaskListViewHolder(val binding: TaskItemLayoutBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -83,7 +85,7 @@ class TaskListAdapter @Inject constructor(private val repository: TaskRepository
 
     fun setData(tasks: List<TaskEntity>){
         taskList = tasks
-        notifyDataSetChanged()
+        sortTaskList()
     }
 
     private fun setTaskStatus(holder: TaskListAdapter.TaskListViewHolder, task: TaskEntity) {
@@ -93,15 +95,14 @@ class TaskListAdapter @Inject constructor(private val repository: TaskRepository
         } else if (task.taskDoneFlag) {
             holder.binding.taskStatusMarker.setImageResource(R.drawable.done_circle)
             holder.binding.taskTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG)
-
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun changeTaskStatus(task: TaskEntity){
         task.taskDoneFlag = !task.taskDoneFlag
-        Log.d("TASK", "TaskName: ${task.taskName}, taskDoneFlag: ${task.taskDoneFlag}")
         updateTask(task)
-        notifyDataSetChanged()
+        sortTaskList()
     }
 
     private fun updateTask(task: TaskEntity){
@@ -110,17 +111,26 @@ class TaskListAdapter @Inject constructor(private val repository: TaskRepository
         }
     }
 
-    fun sortTaskList(sortMode: SortMode){
-        when(sortMode){
-            SortMode.SORT_NO_MODE -> taskList.sortedBy { it.taskId }
+    @SuppressLint("NotifyDataSetChanged")
+    fun setSortMode(sortMode: SortMode){
+        adapterSortMode = sortMode
+        sortTaskList()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun sortTaskList(){
+        when(adapterSortMode){
+            SortMode.SORT_BY_ID -> {
+                taskList = taskList.sortedBy{it.taskId}.sortedBy { it.taskDoneFlag }
+            }
             SortMode.SORT_BY_NAME -> {
-                taskList = taskList.sortedBy {it.taskName}
+                taskList = taskList.sortedBy {it.taskName}.sortedBy { it.taskDoneFlag }
             }
             SortMode.SORT_BY_PRIORITY -> {
-                taskList = taskList.sortedByDescending { it.taskPriority }
+                taskList = taskList.sortedByDescending { it.taskPriority }.sortedBy { it.taskDoneFlag }
             }
             SortMode.SORT_BY_TIME -> {
-                taskList = taskList.sortedBy { taskTimeCompareMap(it.taskDate, it.taskTime) }
+                taskList = taskDateCompare(taskList).sortedBy { it.taskDoneFlag }
             }
         }
         notifyDataSetChanged()

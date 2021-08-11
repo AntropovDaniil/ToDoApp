@@ -10,11 +10,11 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class TaskEntity(
     @PrimaryKey (autoGenerate = true)
-    val taskId: Long = 0,
+    val taskId: Int = 0,
     val taskName: String,
     val taskDescription: String = "",
     val taskDate: String = "",
-    val taskTime: String = "",
+    val taskTime: String = "00:00",
     val taskPriority: TaskPriority = TaskPriority.LOW_PRIORITY,
     val taskRemindFlag: Boolean = false,
     var taskDoneFlag: Boolean = false

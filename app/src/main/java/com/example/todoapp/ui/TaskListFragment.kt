@@ -24,10 +24,8 @@ import com.example.todoapp.adapters.TaskListAdapter
 import com.example.todoapp.databinding.FragmentTaskListBinding
 import com.example.todoapp.enums.SortMode
 import com.example.todoapp.viewModels.TaskViewModel
-import com.example.todoapp.worker.TaskWorker
+import com.example.todoapp.worker.AlarmService
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,6 +36,7 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
 
     private val viewModel: TaskViewModel by activityViewModels()
     @Inject lateinit var adapter: TaskListAdapter
+    @Inject lateinit var alarmService: AlarmService
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +51,9 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
         setSortMode()
 
         setHasOptionsMenu(true)
+
+        //Launch AlarmManager
+        launchAlarm()
 
         return view
     }
@@ -78,8 +80,8 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
                 binding.emptyListBackground.visibility = View.VISIBLE
             }
             R.id.sort_by_creating -> {
-                viewModel.sortMode = SortMode.SORT_NO_MODE
-                viewModel.saveSortMode(SortMode.SORT_NO_MODE)
+                viewModel.sortMode = SortMode.SORT_BY_ID
+                viewModel.saveSortMode(SortMode.SORT_BY_ID)
             }
             R.id.sort_by_name -> {
                 viewModel.sortMode = SortMode.SORT_BY_NAME
@@ -102,7 +104,6 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
                 viewModel.saveLayoutType("LINEAR")
             }
         }
-        adapter.sortTaskList(viewModel.sortMode)
 
         return super.onOptionsItemSelected(item)
     }
@@ -125,7 +126,6 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
                 binding.emptyListBackground.visibility = View.GONE
             }
             adapter.setData(it)
-            adapter.sortTaskList(viewModel.sortMode)
         })
 
         initSwipeListener()
@@ -135,13 +135,13 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
         viewModel.readSortMode.observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty()){
                 when(it){
-                    "SORT_NO_MODE" -> viewModel.sortMode = SortMode.SORT_NO_MODE
+                    "SORT_BY_ID" -> viewModel.sortMode = SortMode.SORT_BY_ID
                     "SORT_BY_TIME" -> viewModel.sortMode = SortMode.SORT_BY_TIME
                     "SORT_BY_PRIORITY" -> viewModel.sortMode = SortMode.SORT_BY_PRIORITY
                     "SORT_BY_NAME" -> viewModel.sortMode = SortMode.SORT_BY_NAME
                 }
             }
-            adapter.sortTaskList(viewModel.sortMode)
+            adapter.setSortMode(viewModel.sortMode)
         })
     }
 
@@ -211,5 +211,9 @@ class TaskListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQuer
 
         val itemTouchHelper = ItemTouchHelper(simpleCallback)
         itemTouchHelper.attachToRecyclerView(binding.taskListRv)
+    }
+
+    private fun launchAlarm(){
+        alarmService.launchAlarm()
     }
 }

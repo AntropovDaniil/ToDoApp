@@ -2,18 +2,14 @@ package com.example.todoapp.viewModels
 
 import android.app.Application
 import androidx.lifecycle.*
-import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
-import com.example.todoapp.database.TaskDatabase
 import com.example.todoapp.database.TaskEntity
 import com.example.todoapp.repository.TaskRepository
 import com.example.todoapp.enums.SortMode
 import com.example.todoapp.repository.DataStoreRepository
-import com.example.todoapp.worker.TaskWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,15 +23,15 @@ class TaskViewModel @Inject constructor(private val repository: TaskRepository,
     val readSortMode = dataStoreRepository.readSortMode().asLiveData()
     val readLayoutType = dataStoreRepository.readLayoutType().asLiveData()
 
-    private val workManager: WorkManager = WorkManager.getInstance(application)
+    //private val workManager: WorkManager = WorkManager.getInstance(application)
 
-    var sortMode = SortMode.SORT_NO_MODE
+    var sortMode = SortMode.SORT_BY_ID
 
 
     init {
         readAllTasks = repository.readAllTasks
         taskList = readAllTasks.value ?: emptyList()
-        launchWorker()
+        //launchWorker()
     }
 
     fun addTask(task: TaskEntity){
@@ -78,29 +74,29 @@ class TaskViewModel @Inject constructor(private val repository: TaskRepository,
         } else return "$hour:$minute"
     }
 
-    private fun launchWorker(){
-        workManager
-            .enqueue(buildWorkerRequest())
-    }
+//    private fun launchWorker(){
+//        workManager
+//            .enqueue(buildWorkerRequest())
+//    }
 
-    private fun buildWorkerRequest() : WorkRequest{
-        val constraints = Constraints.Builder()
-            .setRequiresBatteryNotLow(true)
-            .build()
-
-        val taskWorkerRequest: WorkRequest = PeriodicWorkRequestBuilder<TaskWorker>(12, TimeUnit.HOURS, 1, TimeUnit.HOURS)
-            .addTag("TaskWorker")
-            .setInitialDelay(10, TimeUnit.SECONDS)
-            .setConstraints(constraints)
-            .build()
-
-        return taskWorkerRequest
-    }
+//    private fun buildWorkerRequest() : WorkRequest{
+//        val constraints = Constraints.Builder()
+//            .setRequiresBatteryNotLow(true)
+//            .build()
+//
+//        val taskWorkerRequest: WorkRequest = PeriodicWorkRequestBuilder<TaskWorker>(12, TimeUnit.HOURS, 1, TimeUnit.HOURS)
+//            .addTag("TaskWorker")
+//            .setInitialDelay(10, TimeUnit.SECONDS)
+//            .setConstraints(constraints)
+//            .build()
+//
+//        return taskWorkerRequest
+//    }
 
     fun saveSortMode(sortMode: SortMode){
         viewModelScope.launch(Dispatchers.IO) {
             when (sortMode) {
-                SortMode.SORT_NO_MODE -> dataStoreRepository.saveSortMode("SORT_NO_MODE")
+                SortMode.SORT_BY_ID -> dataStoreRepository.saveSortMode("SORT_BY_ID")
                 SortMode.SORT_BY_TIME -> dataStoreRepository.saveSortMode("SORT_BY_TIME")
                 SortMode.SORT_BY_PRIORITY -> dataStoreRepository.saveSortMode("SORT_BY_PRIORITY")
                 SortMode.SORT_BY_NAME -> dataStoreRepository.saveSortMode("SORT_BY_NAME")
@@ -116,6 +112,8 @@ class TaskViewModel @Inject constructor(private val repository: TaskRepository,
             }
         }
     }
+
+
 
 
 

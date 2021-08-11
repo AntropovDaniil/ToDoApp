@@ -24,7 +24,7 @@
     <string name="search_task_menu">Search task</string>
     <string name="sort_task_menu">Sort by</string>
     <string name="sort_by_name_menu">Name</string>
-    <string name="sort_by_creating">Date of creating</string>
+    <string name="sort_by_creation">Date of creation</string>
     <string name="sort_by_time_menu">Time</string>
     <string name="sort_by_priority_menu">Priority</string>
     <string name="background_text_title">No tasks yet</string>
